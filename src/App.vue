@@ -23,8 +23,8 @@ export default class App extends Vue {
   ml = [] as Message[]
   i = 0
 
-  send() {
-    if (this.model == 'null') {
+  send(proceed: boolean = false) {
+    if ((this.model == 'null') && (!proceed)) {
       Swal.fire({
         icon: 'error',
         title: 'Please select a model',
@@ -33,6 +33,38 @@ export default class App extends Vue {
         confirmButtonText: 'OK',
         timer: 2000,
         timerProgressBar: true
+      })
+
+      return
+    }
+
+    if ((this.token == '') && (!proceed)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No token provided',
+        showCloseButton: true,
+        showConfirmButton: true,
+        confirmButtonText: 'OK',
+        timer: 2000,
+        timerProgressBar: true
+      })
+
+      return
+    }
+
+    if ((this.message == '') && (!proceed)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No message provided. Proceed to send this message?',
+        showCloseButton: true,
+        showConfirmButton: true,
+        confirmButtonText: 'YES',
+        showCancelButton: true,
+        cancelButtonText: 'No'
+      }).then(result => {
+        if (result.isConfirmed) {
+          this.send(true)
+        }
       })
 
       return
