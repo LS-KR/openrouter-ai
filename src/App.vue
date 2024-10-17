@@ -40,8 +40,16 @@ export default class App extends Vue {
         role: 'assistant',
         content: ((it.choices[0] as NonStreamingChoice).message.content).toString()
       })
+      localStorage.setItem('token', this.token)
+
       this.i += 1
     })
+  }
+
+  mounted() {
+    if (localStorage.getItem('token')) {
+      this.token = localStorage.getItem('token')
+    }
   }
 }
 </script>
