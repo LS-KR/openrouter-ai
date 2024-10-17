@@ -5,6 +5,7 @@ import { Message, NonStreamingChoice } from '@/logic/data'
 import { complete } from '@/logic/helper'
 import { marked } from 'marked'
 import { Component, Vue } from 'vue-facing-decorator'
+import Swal from 'sweetalert2'
 
 @Component({
   components: {
@@ -14,7 +15,7 @@ import { Component, Vue } from 'vue-facing-decorator'
 export default class App extends Vue {
   md = [] as string[]
   token = ''
-  model = ''
+  model = 'null'
   modelList = modelList
   message = ''
   resStr = ''
@@ -23,6 +24,20 @@ export default class App extends Vue {
   i = 0
 
   send() {
+    if (this.model == 'null') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please select a model',
+        showCloseButton: true,
+        showConfirmButton: true,
+        confirmButtonText: 'OK',
+        timer: 2000,
+        timerProgressBar: true
+      })
+
+      return
+    }
+
     this.md.push(marked(this.message).toString())
     this.ml.push({
       role: 'user',
@@ -41,6 +56,7 @@ export default class App extends Vue {
         content: ((it.choices[0] as NonStreamingChoice).message.content).toString()
       })
       localStorage.setItem('token', this.token)
+      localStorage.setItem('model', this.model)
 
       this.i += 1
     })
@@ -49,6 +65,9 @@ export default class App extends Vue {
   mounted() {
     if (localStorage.getItem('token')) {
       this.token = localStorage.getItem('token')
+    }
+    if (localStorage.getItem('model')) {
+      this.model = localStorage.getItem('model')
     }
   }
 }
@@ -66,7 +85,7 @@ export default class App extends Vue {
       <span class="pan-text">Model</span>
       <span class="pan-selection">
         <select id="model-selection" v-model="model">
-          <option disabled value="">Select model</option>
+          <option disabled value="null">Select a model</option>
           <option v-for="(e, i) in modelList" :key="i" :value="e">{{ e }}</option>
         </select>
       </span>
