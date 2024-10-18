@@ -125,6 +125,12 @@ export default class App extends Vue {
       this.model = localStorage.getItem('model')
     }
   }
+
+  keybd(e: KeyboardEvent) {
+    if (((e.key === 'Enter') || (e.keyCode === 13)) && (e.ctrlKey)) {
+      this.send(false);
+    }
+  }
 }
 </script>
 
@@ -148,8 +154,8 @@ export default class App extends Vue {
     <div class="area">
       <LoadingBlock v-show="loading" class="loading"/>
       <MarkdownContent :contents="md" :key="i"/>
-      <button v-on:click="send()">Send</button>
-      <textarea v-model="message"></textarea>
+      <button v-on:click="send()">Send (Ctrl + Enter)</button>
+      <textarea v-model="message" v-on:keydown="keybd"></textarea>
     </div>
   </div>
   <div class="right">
@@ -264,6 +270,7 @@ body {
       button {
         height: 1.5rem;
         width: calc(100% - 2rem);
+        margin: 10px auto;
       }
 
       .loading {
