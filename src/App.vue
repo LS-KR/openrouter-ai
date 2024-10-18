@@ -1,4 +1,5 @@
 <script lang="ts">
+import GlobalButton from '@/components/GlobalButton.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
 import MarkdownContent from '@/components/MarkdownContent.vue'
 import { modelList } from '@/logic/config'
@@ -11,7 +12,8 @@ import Swal from 'sweetalert2'
 @Component({
   components: {
     MarkdownContent,
-    LoadingBlock
+    LoadingBlock,
+    GlobalButton,
   }
 })
 export default class App extends Vue {
@@ -154,6 +156,7 @@ export default class App extends Vue {
     <p>Response JSON</p>
     <p v-text="resStr"></p>
   </div>
+  <GlobalButton />
 </template>
 
 <style lang="scss">
