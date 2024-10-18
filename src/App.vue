@@ -81,6 +81,11 @@ export default class App extends Vue {
     this.i += 1;
     this.loading = true;
 
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth' // Optional: Add smooth scrolling effect
+    });
+
     complete({
       messages: this.ml,
       model: this.model
