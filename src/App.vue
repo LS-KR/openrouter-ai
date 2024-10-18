@@ -1,4 +1,5 @@
 <script lang="ts">
+import LoadingBlock from '@/components/LoadingBlock.vue'
 import MarkdownContent from '@/components/MarkdownContent.vue'
 import { modelList } from '@/logic/config'
 import { Message, NonStreamingChoice } from '@/logic/data'
@@ -9,7 +10,8 @@ import Swal from 'sweetalert2'
 
 @Component({
   components: {
-    MarkdownContent
+    MarkdownContent,
+    LoadingBlock
   }
 })
 export default class App extends Vue {
@@ -22,6 +24,7 @@ export default class App extends Vue {
 
   ml = [] as Message[]
   i = 0
+  loading = false
 
   send(proceed: boolean = false) {
     if ((this.model == 'null') && (!proceed)) {
@@ -76,6 +79,7 @@ export default class App extends Vue {
       content: this.md.toString()
     })
     this.i += 1;
+    this.loading = true;
 
     complete({
       messages: this.ml,
@@ -91,6 +95,18 @@ export default class App extends Vue {
       localStorage.setItem('model', this.model)
 
       this.i += 1
+      this.loading = false
+
+      Swal.fire({
+        title: 'Response Message Got',
+        toast: true,
+        icon: 'success',
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        position: 'top-right'
+      })
     })
   }
 
@@ -123,6 +139,7 @@ export default class App extends Vue {
       </span>
     </div>
     <div class="area">
+      <LoadingBlock v-show="loading" class="loading"/>
       <MarkdownContent :contents="md" :key="i"/>
       <button v-on:click="send()">Send</button>
       <textarea v-model="message"></textarea>
@@ -239,6 +256,11 @@ body {
       button {
         height: 1.5rem;
         width: calc(100% - 2rem);
+      }
+
+      .loading {
+        width: 240px;
+        height: 240px;
       }
     }
   }
