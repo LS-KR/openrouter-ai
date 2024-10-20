@@ -90,6 +90,8 @@ export default class MarkdownContent extends Vue {
       padding-left: 1rem;
       border-radius: 0.4rem;
       background-color: #7287fd33;
+      margin: 0.5rem auto;
+      text-wrap: pretty;
     }
 
     code, pre {
@@ -109,6 +111,16 @@ export default class MarkdownContent extends Vue {
       padding-left: 1rem;
       background-color: $surface0;
       border-radius: 0.4rem;
+      margin: 0.5rem auto;
+      text-wrap: nowrap;
+      overflow-x: scroll;
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1rem;
+        border: none !important;
+        color: $sky;
+      }
     }
 
     a {
