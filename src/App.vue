@@ -18,6 +18,7 @@ import Swal from 'sweetalert2'
 })
 export default class App extends Vue {
   md = [] as string[]
+  raw = [] as string[]
   token = ''
   model = 'null'
   modelList = modelList
@@ -75,6 +76,7 @@ export default class App extends Vue {
       return
     }
 
+    this.raw.push(this.message)
     this.md.push(marked(this.message).toString())
     this.ml.push({
       role: 'user',
@@ -85,7 +87,7 @@ export default class App extends Vue {
 
     window.scrollTo({
       top: document.body.scrollHeight,
-      behavior: 'smooth' // Optional: Add smooth scrolling effect
+      behavior: 'smooth'
     });
 
     complete({
@@ -93,6 +95,7 @@ export default class App extends Vue {
       model: this.model
     }, this.token).then(it => {
       this.resStr = JSON.stringify(it)
+      this.raw.push((it.choices[0] as NonStreamingChoice).message.content)
       this.md.push(marked((it.choices[0] as NonStreamingChoice).message.content).toString())
       this.ml.push({
         role: 'assistant',
@@ -131,6 +134,21 @@ export default class App extends Vue {
       this.send(false);
     }
   }
+
+  copy() {
+    navigator.clipboard.writeText(this.raw[this.raw.length - 1]).then(() => {
+      Swal.fire({
+        title: 'Copied!',
+        icon: 'success',
+        toast: true,
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        position: 'top-right'
+      })
+    })
+  }
 }
 </script>
 
@@ -152,9 +170,10 @@ export default class App extends Vue {
       </span>
     </div>
     <div class="area">
+      <button class="ripple" v-on:click="copy()">Copy</button>
       <LoadingBlock v-show="loading" class="loading"/>
       <MarkdownContent :contents="md" :key="i"/>
-      <button v-on:click="send()">Send (Ctrl + Enter)</button>
+      <button class="send-button" v-on:click="send()">Send (Ctrl + Enter)</button>
       <textarea v-model="message" v-on:keydown="keybd"></textarea>
     </div>
   </div>
@@ -191,6 +210,7 @@ body {
     justify-content: start;
     align-items: start;
     gap: 0.2rem;
+    max-width: 75%;
 
     .selection{
       width: calc(100% - 2rem);
@@ -267,7 +287,7 @@ body {
         height: calc(600px - 1.5rem);
       }
 
-      button {
+      .send-button {
         height: 1.5rem;
         width: calc(100% - 2rem);
         margin: 10px auto;
@@ -276,6 +296,31 @@ body {
       .loading {
         width: 240px;
         height: 240px;
+      }
+
+      .ripple {
+        background-position: center;
+        transition: background 0.8s;
+        border: none;
+        border-radius: 2px;
+        padding: 12px 18px;
+        font-size: 16px;
+        text-transform: uppercase;
+        cursor: pointer;
+        color: white;
+        background-color: #ff9ca8ff;
+        box-shadow: 0 0 4px #999;
+        outline: none;
+
+        &:hover {
+          background: #ff9ca8ff radial-gradient(circle, transparent 1%, #ff9ca8ff 1%) center/15000%;
+        }
+
+        &:active {
+          background-color: hsl(347, 100%, 84%);
+          background-size: 100%;
+          transition: background 0s;
+        }
       }
     }
   }

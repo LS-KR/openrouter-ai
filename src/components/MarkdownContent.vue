@@ -37,6 +37,7 @@ export default class MarkdownContent extends Vue {
   width: 100%;
   height: 100%;
   gap: 0;
+  max-width: 100%;
 
   margin-top: 1rem;
 
@@ -114,6 +115,7 @@ export default class MarkdownContent extends Vue {
       margin: 0.5rem auto;
       text-wrap: nowrap;
       overflow-x: scroll;
+      max-width: 100%;
 
       h1, h2, h3, h4, h5, h6 {
         font-family: 'JetBrains Mono', monospace;
