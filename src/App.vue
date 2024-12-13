@@ -80,7 +80,7 @@ export default class App extends Vue {
     this.md.push(marked(this.message).toString())
     this.ml.push({
       role: 'user',
-      content: this.md.toString()
+      content: this.message.toString()
     })
     this.i += 1;
     this.loading = true;
